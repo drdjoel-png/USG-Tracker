@@ -1,5 +1,5 @@
 // Paste the deployed Google Apps Script Web App URL here.
-const APPS_SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxptlsKBabN5EstppI5I34bjosoZwcC0DJJi_8WTV-OeI7Z_mHOOEjl8kjtY1utZhZEg/exec";
 
 const params = new URLSearchParams(window.location.search);
 const equipment = (params.get("equipment") || "").trim();
