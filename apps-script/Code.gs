@@ -1,56 +1,45 @@
+const SPREADSHEET_ID = "1VEvJt6nS_4t3q-rpZSMSHgWuORpXqOHzhtFTEF1vlYk";
 const SHEET_NAME = "LOG";
-
-const ALLOWED_EQUIPMENT = [
-  "USG-01",
-  "USG-02",
-  "USG-03"
-];
-
-function setup() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = spreadsheet.getSheetByName(SHEET_NAME);
-
-  if (!sheet) {
-    sheet = spreadsheet.insertSheet(SHEET_NAME);
-  }
-
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["Timestamp", "Equipment ID", "User"]);
-  }
-}
 
 function doPost(e) {
   try {
     const name = String(e?.parameter?.name || "").trim();
-    const equipment = String(e?.parameter?.equipment || "").trim();
 
-    if (!name) return htmlResponse("Nama wajib diisi.");
-
-    if (!ALLOWED_EQUIPMENT.includes(equipment)) {
-      return htmlResponse("Equipment ID tidak valid.");
+    if (!name) {
+      return htmlResponse("Nama wajib diisi.");
     }
 
-    const lock = LockService.getScriptLock();
-    lock.waitLock(5000);
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let sheet = spreadsheet.getSheetByName(SHEET_NAME);
 
-    try {
-      const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-      if (!sheet) throw new Error(`Sheet ${SHEET_NAME} tidak ditemukan.`);
-
-      sheet.appendRow([new Date(), equipment, name]);
-    } finally {
-      lock.releaseLock();
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(SHEET_NAME);
+      sheet.appendRow(["Timestamp", "Nama"]);
     }
+
+    sheet.appendRow([
+      new Date(),
+      name
+    ]);
 
     return htmlResponse("OK");
+
   } catch (error) {
     console.error(error);
-    return htmlResponse("Terjadi kesalahan.");
+    return htmlResponse("ERROR: " + error.message);
   }
 }
 
+function doGet() {
+  return htmlResponse("USG Tracker aktif.");
+}
+
 function htmlResponse(message) {
-  return HtmlService.createHtmlOutput(`<!doctype html><html><body>${escapeHtml(message)}</body></html>`);
+  return HtmlService.createHtmlOutput(
+    "<!doctype html><html><body>" +
+    escapeHtml(message) +
+    "</body></html>"
+  );
 }
 
 function escapeHtml(value) {
