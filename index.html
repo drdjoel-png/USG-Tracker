@@ -2,21 +2,20 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>USG Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USG PICU</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="container">
     <section class="card">
       <div class="brand">PICU</div>
-      <h1 id="equipmentName">USG</h1>
+      <h1>USG</h1>
       <p class="subtitle">Catat pengguna terakhir</p>
 
       <form id="trackerForm" method="POST" target="submitFrame">
         <label for="name">Nama pengguna</label>
         <input id="name" name="name" type="text" autocomplete="name" placeholder="Masukkan nama" maxlength="80" required>
-        <input id="equipment" name="equipment" type="hidden">
         <button type="submit" id="submitButton">SUBMIT</button>
       </form>
 
