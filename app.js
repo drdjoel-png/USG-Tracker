@@ -1,32 +1,12 @@
-// Paste the deployed Google Apps Script Web App URL here.
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxptlsKBabN5EstppI5I34bjosoZwcC0DJJi_8WTV-OeI7Z_mHOOEjl8kjtY1utZhZEg/exec";
 
-const params = new URLSearchParams(window.location.search);
-const equipment = (params.get("equipment") || "").trim();
-
-const equipmentName = document.getElementById("equipmentName");
-const equipmentInput = document.getElementById("equipment");
 const form = document.getElementById("trackerForm");
 const nameInput = document.getElementById("name");
 const submitButton = document.getElementById("submitButton");
 const successMessage = document.getElementById("successMessage");
 const errorMessage = document.getElementById("errorMessage");
 
-if (!equipment) {
-  equipmentName.textContent = "USG";
-  showError("ID USG tidak ditemukan. Gunakan QR code alat.");
-  submitButton.disabled = true;
-} else {
-  equipmentName.textContent = equipment;
-  equipmentInput.value = equipment;
-}
-
-if (APPS_SCRIPT_URL.startsWith("https://")) {
-  form.action = APPS_SCRIPT_URL;
-} else {
-  showError("Sistem belum dikonfigurasi. Hubungi administrator.");
-  submitButton.disabled = true;
-}
+form.action = APPS_SCRIPT_URL;
 
 form.addEventListener("submit", function (event) {
   const name = nameInput.value.trim();
@@ -37,24 +17,19 @@ form.addEventListener("submit", function (event) {
     return;
   }
 
-  if (!equipment) {
-    event.preventDefault();
-    showError("ID USG tidak ditemukan.");
-    return;
-  }
-
   submitButton.disabled = true;
   submitButton.textContent = "Menyimpan...";
   errorMessage.classList.add("hidden");
+  successMessage.classList.add("hidden");
 
-  // The form posts to a hidden iframe, avoiding CORS/fetch configuration.
-  // The success state is shown after a short delay for a fast bedside UX.
+  // The POST is sent to the Apps Script Web App through a hidden iframe.
+  // The iframe prevents the page from navigating away from the tracker.
   window.setTimeout(() => {
     successMessage.classList.remove("hidden");
     nameInput.value = "";
     submitButton.disabled = false;
     submitButton.textContent = "SUBMIT";
-  }, 800);
+  }, 1200);
 });
 
 function showError(message) {
