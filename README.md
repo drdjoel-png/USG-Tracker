@@ -10,7 +10,7 @@ QR USG → GitHub Pages → isi nama → Google Apps Script → Google Sheet
 
 - `index.html` — halaman mobile-first
 - `style.css` — tampilan
-- `app.js` — membaca `equipment` dari URL dan mengirim data
+- `app.js` — mengirim nama ke Google Apps Script
 - `apps-script/Code.gs` — endpoint pencatat ke Google Sheet
 
 ## Setup Google Sheet
@@ -18,45 +18,40 @@ QR USG → GitHub Pages → isi nama → Google Apps Script → Google Sheet
 Buat spreadsheet, lalu buka **Extensions → Apps Script**.
 
 1. Salin isi `apps-script/Code.gs` ke Apps Script.
-2. Pastikan `ALLOWED_EQUIPMENT` berisi ID alat yang digunakan.
-3. Jalankan fungsi `setup()` sekali untuk membuat sheet `LOG`.
-4. Deploy sebagai **Web app**.
-5. Pilih **Execute as: Me**.
-6. Pilih akses yang memungkinkan pengguna mengirim data tanpa membuka Sheet.
-7. Salin URL `/exec`.
-8. Masukkan URL tersebut ke `APPS_SCRIPT_URL` di `app.js`.
+2. Pastikan `SPREADSHEET_ID` menunjuk ke Google Sheet yang benar.
+3. Deploy sebagai **Web app**.
+4. Pilih **Execute as: Me**.
+5. Pilih akses yang memungkinkan pengguna mengirim data.
+6. Pastikan URL `/exec` yang digunakan di `app.js` adalah deployment terbaru.
+
+Sheet `LOG` akan dibuat otomatis jika belum ada.
 
 ## GitHub Pages
 
 Aktifkan GitHub Pages dari repository settings dan gunakan branch `main` sebagai source.
 
-Contoh URL QR:
+URL QR cukup:
 
 ```text
-https://USERNAME.github.io/USG-Tracker/?equipment=USG-01
+https://USERNAME.github.io/USG-Tracker/
 ```
 
-Untuk USG lain, ubah parameter:
-
-```text
-?equipment=USG-02
-?equipment=USG-03
-```
+Tidak ada parameter Equipment ID karena sistem hanya digunakan untuk satu USG.
 
 ## Log
 
 Sheet `LOG` menyimpan:
 
-| Timestamp | Equipment ID | User |
-|---|---|---|
+| Timestamp | Nama |
+|---|---|
 
-Pengguna dengan timestamp terbaru untuk masing-masing USG adalah **last user**.
+Nama dengan timestamp terbaru adalah **pengguna terakhir**.
 
 ## Prinsip desain
 
+- Satu USG.
 - Tidak ada login user.
 - Tidak ada foto/video.
 - Tidak ada status atau catatan tambahan.
 - Tidak ada database eksternal.
-- Tidak ada API key di GitHub.
 - Fokus pada pencatatan cepat di bedside.
